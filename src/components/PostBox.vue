@@ -21,7 +21,7 @@
               class="p-0"
             >
               <b-card
-                v-for="(post, key) in posts"
+                v-for="(post, key) in examplePosts"
                 body-class="px-0 pb-0"
                 class="m-1"
                 :key="post.id + key"
@@ -29,7 +29,7 @@
                 align="center"
               >
                 <b-card-sub-title class="mb-2"
-                  >Jemand schrieb:</b-card-sub-title
+                  >{{ getTime() }} Jemand schrieb:</b-card-sub-title
                 >
                 <b-card-text>{{ post.content }}</b-card-text>
                 <b-card-footer class="p-0"> #{{ post.id }} </b-card-footer>
@@ -74,13 +74,22 @@ export default {
   },
   data: function() {
     return {
+      examplePosts: [
+        { id: "1", content: "hello", date: 1606383616503 },
+        { id: "2", content: "hello", date: 1606383616503 },
+        { id: "3", content: "hello", date: 1606383616503 },
+      ],
       posts: "",
-      url: process.env.test,
+      url: "https://postbox.shmiede.de/api/chat",
       newPost: "",
       file1: "",
     };
   },
   methods: {
+    getTime(dateInt) {
+      let commentDate = new Date(dateInt);
+      return `${commentDate.getHours()}:${commentDate.getMinutes()}:${commentDate.getSeconds()}`;
+    },
     addFiles() {
       this.$refs.files.click();
     },
@@ -116,6 +125,9 @@ export default {
           },
           {
             withCredentials: true,
+            headers: {
+              "Content-Type": "application/json",
+            },
           }
         )
         .then((response) => {
@@ -146,7 +158,10 @@ export default {
     },
   },
   mounted() {
-    this.getRequest();
+    window.setInterval(() => {
+      console.log("getRequest!");
+      this.getRequest();
+    }, 5000);
   },
 };
 </script>
