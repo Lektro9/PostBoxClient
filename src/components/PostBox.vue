@@ -21,7 +21,7 @@
               class="p-0"
             >
               <b-card
-                v-for="(post, key) in examplePosts"
+                v-for="(post, key) in posts"
                 body-class="px-0 pb-0"
                 class="m-1"
                 :key="post.id + key"
@@ -29,7 +29,7 @@
                 align="center"
               >
                 <b-card-sub-title class="mb-2"
-                  >{{ getTime() }} Jemand schrieb:</b-card-sub-title
+                  >{{ getTime(post.date) }} Jemand schrieb:</b-card-sub-title
                 >
                 <b-card-text>{{ post.content }}</b-card-text>
                 <b-card-footer class="p-0"> #{{ post.id }} </b-card-footer>
@@ -82,7 +82,7 @@ export default {
       posts: "",
       url: "https://postbox.shmiede.de/api/chat",
       newPost: "",
-      file1: "",
+      file1: null,
     };
   },
   methods: {
@@ -96,7 +96,7 @@ export default {
     getRequest() {
       axios
         .get(this.url, {
-          withCredentials: true,
+          withCredentials: false,
         })
         .then((response) => {
           this.posts = response.data;
@@ -124,7 +124,6 @@ export default {
             content: this.newPost,
           },
           {
-            withCredentials: true,
             headers: {
               "Content-Type": "application/json",
             },
